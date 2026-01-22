@@ -27,8 +27,8 @@ All services use free tiers with generous limits:
 
 1. **Clone the repository**
 ```bash
-git clone https://github.com/noblyon22/Arrow-Conveying-AI-ChatbotBackend-Arrow-Bot.git
-cd Arrow-Conveying-AI-ChatbotBackend-Arrow-Bot
+git clone https://github.com/Arrow-Conveying-AI-Chatbot/Backend-Arrow-Bot.git
+cd Backend-Arrow-Bot
 ```
 
 2. **Install dependencies**

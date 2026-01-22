@@ -101,3 +101,9 @@ target/
 .mypy_cache/
 .dmypy.json
 dmypy.json
+
+# Object file
+*.o
+
+# Ada Library Information
+*.ali
