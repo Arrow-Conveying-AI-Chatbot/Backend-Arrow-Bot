@@ -56,7 +56,9 @@ def home():
             '/api/chat/audio': 'POST - Audio chat',
             '/api/history': 'GET - Get chat history',
             '/api/feedback': 'POST - Submit feedback',
-            '/api/status': 'GET - Check status'
+            '/api/status': 'GET - Check status',
+            '/api/voices': 'GET - Get TTS voices',
+            '/api/audio/info': 'GET - Audio service info'
         }
     })
 
@@ -192,6 +194,25 @@ def get_voices():
     """Get available TTS voices"""
     voices = chatbot.audio_service.get_available_voices()
     return jsonify({'voices': voices})
+
+@app.route('/api/audio/info', methods=['GET'])
+def get_audio_info():
+    """Get audio service information"""
+    whisper_info = chatbot.audio_service.get_whisper_info()
+    voices = chatbot.audio_service.get_available_voices()
+    
+    return jsonify({
+        'whisper': whisper_info,
+        'elevenlabs': {
+            'enabled': chatbot.audio_service.elevenlabs_enabled,
+            'voices': voices
+        },
+        'audio_endpoints': {
+            '/api/chat/audio': 'POST - Upload audio file for speech-to-text + AI response',
+            '/api/voices': 'GET - Get available TTS voices',
+            '/api/audio/info': 'GET - Get audio service status'
+        }
+    })
 
 # ============ RUN FLASK APP ============
 

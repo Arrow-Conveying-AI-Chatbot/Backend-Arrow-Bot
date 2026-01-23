@@ -22,6 +22,11 @@ class Config:
     # ElevenLabs (Free tier)
     ELEVENLABS_API_KEY = os.getenv('ELEVENLABS_API_KEY')
     
+    # Whisper (Local, completely free)
+    WHISPER_MODEL = os.getenv('WHISPER_MODEL', 'base')
+    WHISPER_ENABLED = os.getenv('WHISPER_ENABLED', 'True').lower() == 'true'
+    WHISPER_LANGUAGE = os.getenv('WHISPER_LANGUAGE', 'en')
+    
     # Flask settings
     SECRET_KEY = os.getenv('SECRET_KEY', 'dev-secret-key')
     DEBUG = os.getenv('DEBUG', 'True').lower() == 'true'

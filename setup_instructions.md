@@ -75,7 +75,32 @@ CREATE TABLE feedback (
 2. Get 10,000 characters/month free
 3. Add `ELEVENLABS_API_KEY` to `.env`
 
+### Whisper (Completely Free - Local)
+1. **No signup required!** Runs locally on your machine
+2. Install dependencies: `pip install openai-whisper torch torchaudio`
+3. Configure in `.env`:
+```bash
+WHISPER_ENABLED=True
+WHISPER_MODEL=base
+WHISPER_LANGUAGE=en
+```
+4. See `whisper_setup.md` for detailed configuration
+
 ## 📋 API Endpoints
+
+### Chat Endpoints
+- `POST /api/chat` - Text chat with AI
+- `POST /api/chat/audio` - Audio chat (speech-to-text + TTS)
+- `GET /api/history` - Get conversation history
+- `POST /api/feedback` - Submit user feedback
+
+### Utility Endpoints
+- `GET /api/status` - Check service status
+- `GET /api/scrape` - Scrape website content
+- `GET /api/voices` - Get available TTS voices
+- `GET /api/audio/info` - Get audio service information
+
+**Total: 9 API Endpoints**
 
 ### Chat Endpoints
 - `POST /api/chat` - Text chat with AI

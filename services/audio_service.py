@@ -4,6 +4,8 @@ from config import Config
 import logging
 import io
 import base64
+import tempfile
+import os
 
 class AudioService:
     def __init__(self):
@@ -12,11 +14,17 @@ class AudioService:
         self.elevenlabs_enabled = False
         
         # Initialize Whisper (local, free)
-        try:
-            self.whisper_model = whisper.load_model("base")
-            logging.info("Whisper model loaded")
-        except Exception as e:
-            logging.error(f"Whisper initialization failed: {e}")
+        if self.config.WHISPER_ENABLED:
+            try:
+                model_size = self.config.WHISPER_MODEL
+                logging.info(f"Loading Whisper model: {model_size}")
+                self.whisper_model = whisper.load_model(model_size)
+                logging.info(f"Whisper model '{model_size}' loaded successfully")
+            except Exception as e:
+                logging.error(f"Whisper initialization failed: {e}")
+                logging.info("Whisper models available: tiny, base, small, medium, large")
+        else:
+            logging.info("Whisper disabled in configuration")
         
         # Initialize ElevenLabs (free tier)
         if self.config.ELEVENLABS_API_KEY:
@@ -30,11 +38,35 @@ class AudioService:
     def speech_to_text(self, audio_file):
         """Convert speech to text using Whisper"""
         if not self.whisper_model:
+            logging.warning("Whisper model not available")
             return None
         
         try:
-            result = self.whisper_model.transcribe(audio_file)
-            return result["text"]
+            # Handle different audio file types
+            if hasattr(audio_file, 'read'):
+                # File-like object from Flask request
+                with tempfile.NamedTemporaryFile(delete=False, suffix='.wav') as temp_file:
+                    temp_file.write(audio_file.read())
+                    temp_file_path = temp_file.name
+                
+                # Transcribe the audio
+                result = self.whisper_model.transcribe(
+                    temp_file_path,
+                    language=self.config.WHISPER_LANGUAGE if self.config.WHISPER_LANGUAGE != 'auto' else None
+                )
+                
+                # Clean up temp file
+                os.unlink(temp_file_path)
+                
+                return result["text"].strip()
+            else:
+                # Direct file path
+                result = self.whisper_model.transcribe(
+                    audio_file,
+                    language=self.config.WHISPER_LANGUAGE if self.config.WHISPER_LANGUAGE != 'auto' else None
+                )
+                return result["text"].strip()
+                
         except Exception as e:
             logging.error(f"Speech-to-text failed: {e}")
             return None
@@ -42,6 +74,7 @@ class AudioService:
     def text_to_speech(self, text, voice="Rachel"):
         """Convert text to speech using ElevenLabs"""
         if not self.elevenlabs_enabled:
+            logging.warning("ElevenLabs not available")
             return None
         
         try:
@@ -70,3 +103,13 @@ class AudioService:
         except Exception as e:
             logging.error(f"Failed to get voices: {e}")
             return ["Rachel", "Adam", "Domi", "Elli"]
+    
+    def get_whisper_info(self):
+        """Get Whisper model information"""
+        return {
+            'enabled': self.config.WHISPER_ENABLED,
+            'model': self.config.WHISPER_MODEL,
+            'language': self.config.WHISPER_LANGUAGE,
+            'loaded': self.whisper_model is not None,
+            'available_models': ['tiny', 'base', 'small', 'medium', 'large']
+        }

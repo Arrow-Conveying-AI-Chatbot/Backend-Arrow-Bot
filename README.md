@@ -25,6 +25,15 @@ All services use free tiers with generous limits:
 
 ## 🛠️ Quick Start
 
+### Option 1: Automated Setup (Recommended)
+```bash
+# Clone and setup automatically
+git clone https://github.com/Arrow-Conveying-AI-Chatbot/Backend-Arrow-Bot.git
+cd Backend-Arrow-Bot
+python setup_environment.py
+```
+
+### Option 2: Manual Setup
 1. **Clone the repository**
 ```bash
 git clone https://github.com/Arrow-Conveying-AI-Chatbot/Backend-Arrow-Bot.git
@@ -42,7 +51,12 @@ copy .env.example .env
 # Edit .env with your API keys
 ```
 
-4. **Run the application**
+4. **Test Whisper setup**
+```bash
+python test_whisper.py
+```
+
+5. **Run the application**
 ```bash
 python app.py
 ```
@@ -51,7 +65,7 @@ python app.py
 
 ### Chat Endpoints
 - `POST /api/chat` - Text chat with AI
-- `POST /api/chat/audio` - Audio chat (speech + TTS)
+- `POST /api/chat/audio` - Audio chat (speech-to-text + TTS)
 - `GET /api/history` - Conversation history
 - `POST /api/feedback` - User feedback
 
@@ -59,6 +73,9 @@ python app.py
 - `GET /api/status` - Service status
 - `GET /api/scrape` - Website scraping
 - `GET /api/voices` - Available TTS voices
+- `GET /api/audio/info` - Audio service information
+
+**Total: 9 API Endpoints**
 
 ## 🔧 Configuration
 
